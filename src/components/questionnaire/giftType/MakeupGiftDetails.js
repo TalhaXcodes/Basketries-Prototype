@@ -5,15 +5,6 @@ const MakeupGiftDetails = ({ gift, recipientId, index, handleGiftSelection }) =>
     handleGiftSelection(recipientId, index, field, value);
   };
 
-  const handleCheckboxChange = (item) => {
-    const selected = gift.makeupItems || [];
-    const updated = selected.includes(item)
-      ? selected.filter((i) => i !== item)
-      : [...selected, item];
-
-    handleChange("makeupItems", updated);
-  };
-
   const priceOptions = [
     "1000–3000 PKR",
     "3000–4000 PKR",
@@ -74,19 +65,21 @@ const MakeupGiftDetails = ({ gift, recipientId, index, handleGiftSelection }) =>
       {/* What do you want to add */}
       <div className="mb-4">
         <label className="block text-gray-700 font-medium mb-2">
-          What do you want to add? (Select all that apply)
+          What do you want to add? (Select only one)
         </label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {makeupItems.map((item) => (
             <label key={item} className="flex items-center space-x-2">
               <input
-                type="checkbox"
-                checked={gift.makeupItems?.includes(item) || false}
-                onChange={() => handleCheckboxChange(item)}
+                type="radio"
+                name={`makeupItem-${recipientId}-${index}`}   // 👈 ensures only one can be selected
+                checked={gift.makeupItem === item}
+                onChange={() => handleChange("makeupItem", item)}   // 👈 update state with single selection
               />
               <span className="text-gray-700">{item}</span>
             </label>
           ))}
+
         </div>
       </div>
     </div>
