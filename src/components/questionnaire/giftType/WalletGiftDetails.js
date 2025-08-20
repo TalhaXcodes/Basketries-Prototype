@@ -111,8 +111,12 @@ const WalletGiftDetails = ({
           value={gift.walletEngraving || ""}
           onChange={(e) => handleChange("walletEngraving", e.target.value)}
           placeholder="e.g., Name or initials"
+          maxLength={20}
           className="w-full border border-rose-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
         />
+        <p className="text-sm text-gray-500 mt-1">
+          {20 - (gift.walletEngraving?.length || 0)} characters left
+        </p>
       </div>
     </div>
   );
