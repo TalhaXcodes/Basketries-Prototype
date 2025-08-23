@@ -99,9 +99,11 @@ const ClothingGiftDetails = ({
             {maleStyleOptions.map((style) => (
               <label key={style} className="flex items-center space-x-2">
                 <input
-                  type="checkbox"
-                  checked={gift.maleDressStyle?.includes(style) || false}
-                  onChange={() => handleCheckboxChange("maleDressStyle", style)}
+                  type="radio"
+                  name={`maleStyle-${recipientId}-${index}`}
+                  value={style}
+                  checked={gift.maleDressStyle === style}
+                  onChange={() => handleChange("maleDressStyle", style)}
                 />
                 <span className="text-gray-700">{style}</span>
               </label>
@@ -131,7 +133,7 @@ const ClothingGiftDetails = ({
       </div>
 
       {/* Number of pieces (for both) */}
-      <div className="mb-4">
+      {gift.dressType === "Unstitched dress" && (<div className="mb-4">
         <label className="block text-gray-700 font-medium mb-1">
           Please indicate the preferred number of pieces for the dress:
         </label>
@@ -148,7 +150,7 @@ const ClothingGiftDetails = ({
             </label>
           ))}
         </div>
-      </div>
+      </div>)}
 
       {/* 👩 Female-only Style (if stitched) */}
       {isFemale && isStitched && (
@@ -160,10 +162,12 @@ const ClothingGiftDetails = ({
             {femaleStyleOptions.map((style) => (
               <label key={style} className="flex items-center space-x-2">
                 <input
-                  type="checkbox"
-                  checked={gift.femaleDressStyle?.includes(style) || false}
+                  type="radio"
+                  name={`femaleStyle-${recipientId}-${index}`}
+                  value={style}
+                  checked={gift.femaleDressStyle === style}
                   onChange={() =>
-                    handleCheckboxChange("femaleDressStyle", style)
+                    handleChange("femaleDressStyle", style)
                   }
                 />
                 <span className="text-gray-700">{style}</span>
