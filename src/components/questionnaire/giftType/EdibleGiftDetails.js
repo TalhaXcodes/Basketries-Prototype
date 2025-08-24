@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 const EdibleGiftDetails = ({
   gift,
@@ -6,9 +6,13 @@ const EdibleGiftDetails = ({
   index,
   handleGiftSelection,
 }) => {
-  const handleChange = (field, value) => {
+  const handleChange = useCallback(
+  (field, value) => {
     handleGiftSelection(recipientId, index, field, value);
-  };
+  },
+  [handleGiftSelection, recipientId, index] // dependencies
+);
+
 
   const handleCheckboxChange = (item) => {
     const selected = gift.foodItems || [];
@@ -34,6 +38,30 @@ const EdibleGiftDetails = ({
     "Marshmellows",
     "Cola cans",
   ];
+
+  const foodFlavourOptions = {
+    Chocolates: ["Dark Chocolate", "Milk Chocolate", "White Chocolate", "Hazelnut"],
+    Brownie: ["Classic Fudge", "Walnut", "Red Velvet Brownie", "Peanut Butter"],
+    Cake: ["Chocolate", "Red Velvet", "Vanilla", "Black Forest"],
+    Cupcakes: ["Chocolate", "Vanilla", "Strawberry", "Lemon"],
+    Snacks: ["Cheese", "Barbecue", "Sour Cream & Onion", "Spicy Chili"],
+    Jellies: ["Strawberry", "Mango", "Orange", "Grape"],
+    Popcorns: ["Butter", "Caramel", "Cheese", "Spicy"],
+    Marshmellows: ["Classic Vanilla", "Strawberry", "Chocolate-coated", "Caramel-filled"],
+    Cola: [] // no flavours
+  };
+
+  const [selectedFlavours, setSelectedFlavours] = useState({});
+
+  const handleFlavourChange = (foodType, flavour) => {
+    setSelectedFlavours((prev) => ({
+      ...prev,
+      [foodType]: flavour,
+    }));
+    handleChange("flavours", { ...selectedFlavours, [foodType]: flavour });
+  };
+
+
 
   const priceOptions = [
     "1000 PKR",
@@ -142,29 +170,31 @@ const EdibleGiftDetails = ({
         </div>
       </div>
 
-      {/* 🍫 Preferred Flavour */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Preferred Flavour</label>
-        <select
-          value={gift.preferredFlavour || ""}
-          onChange={(e) => handleChange("preferredFlavour", e.target.value)}
-          className="w-full border border-rose-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-          disabled={!isPriceSelected}
-        >
-          {!isPriceSelected && <option value="">Select a price first</option>}
-          {isPriceSelected && [
-            "Chocolate",
-            "Belgian Chocolate",
-            "Red Velvet",
-            "Caramel",
-            "Vanilla",
-          ].map((flavour) => (
-            <option key={flavour} value={flavour}>
-              {flavour}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* 🍫 Flavours for Selected Foods */}
+      {gift.foodItems?.map(
+        (item) =>
+          foodFlavourOptions[item] &&
+          foodFlavourOptions[item].length > 0 && (
+            <div key={item} className="mb-4">
+              <label className="block text-gray-700 font-medium mb-1">
+                Flavour for {item}
+              </label>
+              <select
+                value={selectedFlavours[item] || ""}
+                onChange={(e) => handleFlavourChange(item, e.target.value)}
+                className="w-full border border-rose-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                disabled={!isPriceSelected}
+              >
+                <option value="">Select a flavour</option>
+                {foodFlavourOptions[item].map((flavour) => (
+                  <option key={flavour} value={flavour}>
+                    {flavour}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )
+      )}
     </div>
   );
 };
