@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const RecipientInfoForm = ({ recipient, setGiftData }) => {
+const RecipientInfoForm = ({ recipient, setGiftData, setIsStepValid }) => {
   const handleChange = (field, value) => {
     setGiftData((prev) =>
       prev.map((r) => {
@@ -69,6 +69,27 @@ const RecipientInfoForm = ({ recipient, setGiftData }) => {
     "Other",
   ];
 
+  useEffect(() => {
+    let valid =
+      recipient.occasion?.length > 0 &&
+      !!recipient.relationship &&
+      !!recipient.gender &&
+      (!!recipient.ageType || isAutoAdult) &&
+      !!recipient.ageGroup;
+
+    if (recipient.ageType === "Kid") {
+      valid =
+        valid &&
+        recipient.kidDislikes?.length > 0 &&
+        recipient.kidToyTypes?.length > 0;
+    }
+
+    if (recipient.ageType === "Adult") {
+      valid = valid && !!recipient.knownDuration;
+    }
+
+    setIsStepValid(valid);
+  }, [recipient, isAutoAdult, setIsStepValid]);
 
 
   return (
@@ -285,5 +306,6 @@ const RecipientInfoForm = ({ recipient, setGiftData }) => {
     </div>
   );
 };
+
 
 export default RecipientInfoForm;

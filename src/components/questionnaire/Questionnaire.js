@@ -18,6 +18,8 @@ const Questionnaire = () => {
     helpful: "",
     suggestion: "",
   });
+  const [isStepValid, setIsStepValid] = useState(false);
+
 
 
   const maxRecipients = 10;
@@ -144,6 +146,7 @@ const Questionnaire = () => {
               <RecipientInfoForm
                 recipient={giftData[recipientStepIndex]}
                 setGiftData={setGiftData}
+                setIsStepValid={setIsStepValid}
               />
 
               <div className="flex justify-between mt-6">
@@ -159,7 +162,10 @@ const Questionnaire = () => {
                   Back
                 </button>
 
-                <button onClick={() => setRecipientSubStep(2)} className="bg-rose-600 text-white py-2 px-4 rounded-md hover:bg-rose-700 transition">
+                <button onClick={() => setRecipientSubStep(2)}
+                  disabled={!isStepValid}
+                  className={`px-4 py-2 rounded ${isStepValid ? "bg-rose-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}>
                   Next
                 </button>
               </div>
@@ -234,8 +240,8 @@ const Questionnaire = () => {
               recipients={recipients}
               giftOptions={
                 giftData[recipientStepIndex]?.gender === "Female"
-                  ? ["Clothing", "Shoes", "Bag/Wallet", "Jewellery", "Perfume", "Edible Stuff","Makeup Products"]
-                  : ["Clothing", "Shoes", "Jewellery", "Perfume", "Edible Stuff","Wallet"]
+                  ? ["Clothing", "Shoes", "Bag/Wallet", "Jewellery", "Perfume", "Edible Stuff", "Makeup Products"]
+                  : ["Clothing", "Shoes", "Jewellery", "Perfume", "Edible Stuff", "Wallet"]
               }
               handleGiftCountChange={handleGiftCountChange}
               handleGiftSelection={handleGiftSelection}
