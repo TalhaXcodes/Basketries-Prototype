@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const ShoeGiftDetails = ({
   gift,
@@ -7,8 +7,17 @@ const ShoeGiftDetails = ({
   handleGiftSelection,
   gender,
   ageType,
+  setGiftValid,
 }) => {
-    if(ageType !== "Adult") return null;
+
+    useEffect(() => {
+    const isValid =
+      gift.shoePrice && gift.shoeSize && gift.shoeColor && gift.shoeStyle;
+    setGiftValid(index, !!isValid);
+  }, [gift, index, setGiftValid]);
+
+
+  if (ageType !== "Adult") return null;
   const handleChange = (field, value) => {
     handleGiftSelection(recipientId, index, field, value);
   };
@@ -43,6 +52,8 @@ const ShoeGiftDetails = ({
     "Slippers",
     "Peshawari style",
   ];
+
+
 
   return (
     <div className="mb-4">

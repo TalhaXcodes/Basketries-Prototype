@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const ClothingGiftDetails = ({
   gift,
@@ -7,22 +7,15 @@ const ClothingGiftDetails = ({
   handleGiftSelection,
   gender,
   ageType,
+  setGiftValid,
 }) => {
-  if (ageType !== "Adult") return null; // ❌ not for kids
 
-  const handleChange = (field, value) => {
-    handleGiftSelection(recipientId, index, field, value);
-  };
+  // 🔹 Derived booleans come first
+  const isStitched = gift.dressType === "Stitched dress";
+  const isFemale = gender === "Female";
+  const isMale = gender === "Male";
 
-  const handleCheckboxChange = (field, option) => {
-    const selected = gift[field] || [];
-    const updated = selected.includes(option)
-      ? selected.filter((i) => i !== option)
-      : [...selected, option];
-
-    handleChange(field, updated);
-  };
-
+  // 🔹 Options come next
   const dressTypeOptions = ["Stitched dress", "Unstitched dress"];
   const colorOptions = [
     "Red", "Green", "Blue", "Black", "Yellow", "White",
@@ -40,9 +33,49 @@ const ClothingGiftDetails = ({
     "15,000–20,000 PKR",
   ];
 
-  const isStitched = gift.dressType === "Stitched dress";
-  const isFemale = gender === "Female";
-  const isMale = gender === "Male";
+  // 🔹 Handlers after options
+  const handleChange = (field, value) => {
+    handleGiftSelection(recipientId, index, field, value);
+  };
+
+  const handleCheckboxChange = (field, option) => {
+    const selected = gift[field] || [];
+    const updated = selected.includes(option)
+      ? selected.filter((i) => i !== option)
+      : [...selected, option];
+    handleChange(field, updated);
+  };
+
+  // 🔹 useEffect at bottom (uses everything above)
+  useEffect(() => {
+    let isValid = true;
+
+    // Rule 1: Dress Type required
+    if (!gift.dressType) isValid = false;
+
+    // Rule 2: At least one color
+    if (!gift.dressColors || gift.dressColors.length === 0) isValid = false;
+
+    // Rule 3: Price required
+    if (!gift.dressPrice) isValid = false;
+
+    // Rule 4: If unstitched, pieces required
+    if (gift.dressType === "Unstitched dress" && !gift.dressPieces) {
+      isValid = false;
+    }
+
+    // Rule 5: If stitched
+    if (isStitched) {
+      if (isMale && !gift.maleDressStyle) isValid = false;
+      if (isFemale && !gift.femaleDressStyle) isValid = false;
+      if (!gift.dressSize) isValid = false;
+    }
+
+    setGiftValid(index, isValid);
+  }, [gift, isMale, isFemale, isStitched, index, setGiftValid]);
+
+  if (ageType !== "Adult") return null; // ❌ Not for kids
+
 
   return (
     <div className="mb-4">

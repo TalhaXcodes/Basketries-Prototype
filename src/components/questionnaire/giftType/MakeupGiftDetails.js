@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const MakeupGiftDetails = ({ gift, recipientId, index, handleGiftSelection }) => {
+const MakeupGiftDetails = ({ gift, recipientId, index, handleGiftSelection, setGiftValid }) => {
+
+  
+
   const handleChange = (field, value) => {
     handleGiftSelection(recipientId, index, field, value);
   };

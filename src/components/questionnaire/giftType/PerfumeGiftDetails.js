@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const PerfumeGiftDetails = ({
   gift,
@@ -6,6 +6,7 @@ const PerfumeGiftDetails = ({
   index,
   handleGiftSelection,
   ageType,
+  setGiftValid,
 }) => {
   const handleCheckboxChange = (field, value) => {
     const current = gift[field] || [];
@@ -15,6 +16,23 @@ const PerfumeGiftDetails = ({
 
     handleGiftSelection(recipientId, index, field, updated);
   };
+
+
+   useEffect(() => {
+    let isValid = false;
+
+    if (ageType === "Kid") {
+      isValid =
+        gift.perfumeBudget &&
+        gift.perfumeScent?.length > 0 &&
+        (!gift.perfumeScent.includes("Other") || gift.perfumeScentOther?.trim());
+    } else {
+      isValid = gift.perfumePrice && gift.perfumeScent;
+    }
+
+    setGiftValid(index, isValid);
+  }, [gift, ageType, index, setGiftValid]);
+
   return (
     <div className="mb-4">
       <h4 className="text-lg font-semibold text-rose-600 mb-4">

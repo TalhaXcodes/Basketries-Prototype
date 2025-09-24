@@ -5,13 +5,14 @@ const EdibleGiftDetails = ({
   recipientId,
   index,
   handleGiftSelection,
+  setGiftValid,
 }) => {
   const handleChange = useCallback(
-  (field, value) => {
-    handleGiftSelection(recipientId, index, field, value);
-  },
-  [handleGiftSelection, recipientId, index] // dependencies
-);
+    (field, value) => {
+      handleGiftSelection(recipientId, index, field, value);
+    },
+    [handleGiftSelection, recipientId, index] // dependencies
+  );
 
 
   const handleCheckboxChange = (item) => {
@@ -108,6 +109,21 @@ const EdibleGiftDetails = ({
       handleChange("foodItems", trimmedItems);
     }
   }, [gift.edibleQuantity, gift.foodItems, handleChange]);
+
+
+  useEffect(() => {
+    const isValid =
+      gift.ediblePrice &&
+      gift.edibleQuantity &&
+      gift.foodItems?.length === gift.edibleQuantity &&
+      gift.foodItems.every(
+        (item) =>
+          !foodFlavourOptions[item] || selectedFlavours[item]
+      );
+
+    setGiftValid(index, isValid);
+  }, [gift, selectedFlavours, index, setGiftValid]);
+
 
   return (
     <div className="mb-4">

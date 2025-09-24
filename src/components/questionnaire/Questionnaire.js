@@ -247,6 +247,7 @@ const Questionnaire = () => {
               handleGiftSelection={handleGiftSelection}
               maxTotalItems={maxTotalItems}
               giftData={giftData}
+              setIsStepValid={setIsStepValid}
             />
 
             <div className="mt-6 flex justify-between">
@@ -256,9 +257,9 @@ const Questionnaire = () => {
               >
                 Back
               </button>
-
               <button
                 onClick={() => {
+                  if (!isStepValid) return; // safety guard, shouldn’t trigger if disabled
                   if (recipientStepIndex < recipients - 1) {
                     setRecipientStepIndex((prev) => prev + 1);
                     setRecipientSubStep(1);
@@ -266,12 +267,17 @@ const Questionnaire = () => {
                     setPhase("personality");
                   }
                 }}
-                className="bg-rose-600 text-white py-2 px-4 rounded-md hover:bg-rose-700 transition"
+                disabled={!isStepValid}  // 👈 disable if invalid
+                className={`py-2 px-4 rounded-md transition 
+    ${isStepValid
+                    ? "bg-rose-600 text-white hover:bg-rose-700"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
               >
                 {recipientStepIndex === recipients - 1
                   ? "Next"
                   : "Continue to Next Recipient"}
               </button>
+
             </div>
           </div>
         )}

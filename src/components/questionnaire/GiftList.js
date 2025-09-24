@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import GiftItem from "./GiftItem";
 
 const GiftList = ({
@@ -9,7 +9,29 @@ const GiftList = ({
   handleGiftSelection,
   maxTotalItems,
   giftData,
+  setIsStepValid
 }) => {
+
+  const [giftValidities, setGiftValidities] = useState(
+    recipient.gifts.map(() => false) // default all invalid
+  );
+
+  useEffect(() => {
+  const allValid = giftValidities.every(Boolean);
+  setIsStepValid(allValid);   // 👈 comes as a prop from Questionnaire
+}, [giftValidities, setIsStepValid]);
+
+
+
+  const setGiftValid = (giftIndex, isValid) => {
+    setGiftValidities((prev) => {
+      const updated = [...prev];
+      updated[giftIndex] = isValid;
+      return updated;
+    });
+  };
+
+
 
   return (
     <div className="space-y-6">
@@ -23,8 +45,9 @@ const GiftList = ({
           index={index}
           handleGiftSelection={handleGiftSelection}
           giftOptions={giftOptions}
-          ageType = {recipient.ageType}
-          gender = {recipient.gender}
+          ageType={recipient.ageType}
+          gender={recipient.gender}
+          setGiftValid={setGiftValid}
         />
       ))}
     </div>

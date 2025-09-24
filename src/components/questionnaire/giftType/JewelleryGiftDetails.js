@@ -7,6 +7,7 @@ const JewelleryGiftDetails = ({
   handleGiftSelection,
   gender,
   ageType,
+  setGiftValid
 }) => {
   const handleChange = (field, value) => {
     handleGiftSelection(recipientId, index, field, value);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const WalletGiftDetails = ({
   gift,
@@ -6,7 +6,20 @@ const WalletGiftDetails = ({
   index,
   handleGiftSelection,
   gender,
+  setGiftValid,
 }) => {
+
+  useEffect(() => {
+    let isValid = true;
+
+    if (!gift.walletColor) isValid = false;
+    if (!gift.walletStyle) isValid = false;
+    if (!gift.walletPrice) isValid = false;
+
+    setGiftValid(index, isValid);
+  }, [gift, index, setGiftValid]);
+
+
   const handleChange = (field, value) => {
     handleGiftSelection(recipientId, index, field, value);
   };

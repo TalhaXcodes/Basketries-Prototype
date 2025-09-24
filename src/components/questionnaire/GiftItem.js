@@ -16,6 +16,7 @@ const GiftItem = ({
   giftOptions,
   ageType,
   gender,
+  setGiftValid,
 }) => {
   let finalGiftOptions = [];
 
@@ -108,6 +109,7 @@ const GiftItem = ({
           recipientId={recipientId}
           index={index}
           handleGiftSelection={handleGiftSelection}
+          setGiftValid={setGiftValid}
         />
       )}
 
@@ -118,6 +120,7 @@ const GiftItem = ({
           index={index}
           handleGiftSelection={handleGiftSelection}
           gender={gender}
+          setGiftValid={setGiftValid}
         />
       )}
 
@@ -129,6 +132,7 @@ const GiftItem = ({
           handleGiftSelection={handleGiftSelection}
           gender={gender}
           ageType={ageType}
+          setGiftValid={setGiftValid}
         />
       )}
 
@@ -140,6 +144,7 @@ const GiftItem = ({
           index={index}
           handleGiftSelection={handleGiftSelection}
           ageType={ageType}
+          setGiftValid={setGiftValid}
         />
       )}
 
@@ -149,6 +154,7 @@ const GiftItem = ({
           recipientId={recipientId}
           index={index}
           handleGiftSelection={handleGiftSelection}
+          setGiftValid={setGiftValid}
         />
       )}
 
@@ -160,6 +166,7 @@ const GiftItem = ({
           handleGiftSelection={handleGiftSelection}
           gender={gender}
           ageType={ageType}
+          setGiftValid={setGiftValid}
         />
       )}
 
@@ -171,6 +178,7 @@ const GiftItem = ({
           handleGiftSelection={handleGiftSelection}
           gender={gender}
           ageType={ageType}
+          setGiftValid={setGiftValid}
         />
       )}
 
