@@ -143,9 +143,10 @@ const JewelleryGiftDetails = ({
               ].map((style) => (
                 <label key={style} className="flex items-center space-x-2">
                   <input
-                    type="checkbox"
-                    checked={gift.jewelryStyle?.includes(style) || false}
-                    onChange={() => handleCheckboxChange("jewelryStyle", style)}
+                    type="radio"
+                    name={`jewelryStyle-${recipientId}-${index}`}
+                    checked={gift.jewelryStyle === style}
+                    onChange={() => handleChange("jewelryStyle", style)}
                     disabled={!isPriceSelected}
                   />
                   <span className="text-gray-700">{style}</span>
@@ -171,9 +172,10 @@ const JewelleryGiftDetails = ({
               ].map((color) => (
                 <label key={color} className="flex items-center space-x-2">
                   <input
-                    type="checkbox"
-                    checked={gift.jewelryColors?.includes(color) || false}
-                    onChange={() => handleCheckboxChange("jewelryColors", color)}
+                    type="radio"
+                    name={`jewelryColors-${recipientId}-${index}`}
+                    checked={gift.jewelryColors === color}
+                    onChange={() => handleChange("jewelryColors", color)}
                     disabled={!isPriceSelected}
                   />
                   <span className="text-gray-700">{color}</span>
@@ -194,9 +196,10 @@ const JewelleryGiftDetails = ({
               {["Silver", "Gold"].map((color) => (
                 <label key={color} className="flex items-center space-x-2">
                   <input
-                    type="checkbox"
-                    checked={gift.jewelryColor?.includes(color) || false}
-                    onChange={() => handleCheckboxChange("jewelryColor", color)}
+                    type="radio"
+                    name={`jewelryColor-${recipientId}-${index}`}
+                    checked={gift.jewelryColor === color}
+                    onChange={() => handleChange("jewelryColor", color)}
                     disabled={!isPriceSelected}
                   />
                   <span className="text-gray-700">{color}</span>
@@ -212,9 +215,10 @@ const JewelleryGiftDetails = ({
               {["Bracelet", "Chain", "Rings", "Wrist bands"].map((style) => (
                 <label key={style} className="flex items-center space-x-2">
                   <input
-                    type="checkbox"
-                    checked={gift.jewelryStyle?.includes(style) || false}
-                    onChange={() => handleCheckboxChange("jewelryStyle", style)}
+                    type="radio"
+                    name={`jewelryStyle-${recipientId}-${index}`}
+                    checked={gift.jewelryStyle === style}
+                    onChange={() => handleChange("jewelryStyle", style)}
                     disabled={!isPriceSelected}
                   />
                   <span className="text-gray-700">{style}</span>
@@ -235,9 +239,10 @@ const JewelleryGiftDetails = ({
               {["Silver", "Gold"].map((color) => (
                 <label key={color} className="flex items-center space-x-2">
                   <input
-                    type="checkbox"
-                    checked={gift.jewelryColor?.includes(color) || false}
-                    onChange={() => handleCheckboxChange("jewelryColor", color)}
+                    type="radio"
+                    name={`jewelryColor-${recipientId}-${index}`}
+                    checked={gift.jewelryColor === color}
+                    onChange={() => handleChange("jewelryColor", color)}
                     disabled={!isPriceSelected}
                   />
                   <span className="text-gray-700">{color}</span>
@@ -261,9 +266,10 @@ const JewelleryGiftDetails = ({
               ].map((style) => (
                 <label key={style} className="flex items-center space-x-2">
                   <input
-                    type="checkbox"
-                    checked={gift.jewelryStyle?.includes(style) || false}
-                    onChange={() => handleCheckboxChange("jewelryStyle", style)}
+                    type="radio"
+                    name={`jewelryStyle-${recipientId}-${index}`}
+                    checked={gift.jewelryStyle === style}
+                    onChange={() => handleChange("jewelryStyle", style)}
                     disabled={!isPriceSelected}
                   />
                   <span className="text-gray-700">{style}</span>

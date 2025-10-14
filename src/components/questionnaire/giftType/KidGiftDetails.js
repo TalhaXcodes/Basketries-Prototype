@@ -1,19 +1,34 @@
-import { useCallback } from "react";
+import { useEffect, useCallback } from "react";
 
 const KidGiftDetails = ({
   gift,
   recipientId,
   index,
   handleGiftSelection,
+  setGiftValid,
 }) => {
+
+  const selectedType = gift.type;
+
+   useEffect(() => {
+    let isValid = false;
+
+    if (selectedType === "Toys") {
+      if (gift.kidBudget) {
+        isValid = true;
+      }
+    }
+
+    setGiftValid(index, isValid);
+  }, [gift, recipientId, index, setGiftValid, selectedType]);
+
+
   const handleChange = useCallback(
     (field, value) => {
       handleGiftSelection(recipientId, index, field, value);
     },
     [handleGiftSelection, recipientId, index]
   );
-
-  const selectedType = gift.type;
 
 
   const budgetOptions = [

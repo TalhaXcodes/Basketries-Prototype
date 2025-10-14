@@ -1,8 +1,17 @@
 import React, { useEffect } from "react";
 
 const MakeupGiftDetails = ({ gift, recipientId, index, handleGiftSelection, setGiftValid }) => {
+  useEffect(() => {
+    let isValid = false;
 
-  
+    // ✅ Makeup is valid if both price and item are selected
+    if (gift.makeupPrice && gift.makeupItem) {
+      isValid = true;
+    }
+
+    setGiftValid(index, isValid);
+  }, [gift, index, setGiftValid]);
+
 
   const handleChange = (field, value) => {
     handleGiftSelection(recipientId, index, field, value);

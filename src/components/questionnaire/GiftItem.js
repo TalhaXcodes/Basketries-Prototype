@@ -190,6 +190,7 @@ const GiftItem = ({
           index={index}
           handleGiftSelection={handleGiftSelection}
           ageType={ageType}
+          setGiftValid={setGiftValid}
         />
       )}
     </div>
