@@ -93,21 +93,15 @@ const PerfumeGiftDetails = ({
           ).map((scent) => (
             <label key={scent} className="flex items-center space-x-2">
               <input
-                type={ageType === "Kid" ? "checkbox" : "radio"}
+                type="radio"
                 name={`perfumeScent-${recipientId}-${index}`}
-                checked={
-                  ageType === "Kid"
-                    ? gift.perfumeScent?.includes(scent)
-                    : gift.perfumeScent === scent
-                }
-                onChange={(e) =>
-                  ageType === "Kid"
-                    ? handleCheckboxChange("perfumeScent", scent)
-                    : handleGiftSelection(
-                      recipientId,
-                      index,
-                      "perfumeScent",
-                      scent
+                checked={gift.perfumeScent === scent}
+                onChange={() =>
+                  handleGiftSelection(
+                    recipientId,
+                    index,
+                    "perfumeScent",
+                    scent
                     )
                 }
               />
