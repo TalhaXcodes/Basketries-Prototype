@@ -75,6 +75,7 @@ const Questionnaire = () => {
   };
 
   const handleGiftSelection = (recipientId, giftIndex, field, value) => {
+    console.log("Updating:", field, "=", value);
     setGiftData((prev) =>
       prev.map((recipient) =>
         recipient.id === recipientId

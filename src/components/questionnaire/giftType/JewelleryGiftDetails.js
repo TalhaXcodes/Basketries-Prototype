@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const JewelleryGiftDetails = ({
   gift,
@@ -11,19 +11,6 @@ const JewelleryGiftDetails = ({
 }) => {
   const handleChange = (field, value) => {
     handleGiftSelection(recipientId, index, field, value);
-  };
-
-  const handleCheckboxChange = (field, option) => {
-    const selected = gift[field] || [];
-    const maxSelections = gift.quantity || 1;
-
-    if (selected.includes(option)) {
-      const updated = selected.filter((i) => i !== option);
-      handleChange(field, updated);
-    } else if (selected.length < maxSelections) {
-      const updated = [...selected, option];
-      handleChange(field, updated);
-    }
   };
 
   const isKid = ageType === "Kid";
@@ -64,23 +51,35 @@ const JewelleryGiftDetails = ({
     }
   }, [gift.jewelryPrice, gift.quantity, handleChange]);
 
-  // Effect to unmark excess checkboxes when quantity changes
+
   useEffect(() => {
-    const maxSelections = gift.quantity || 1;
+    const hasPrice = !!gift.jewelryPrice;
+    const hasQuantity = !!gift.quantity;
 
-    // Trim jewelryStyle if it exceeds quantity
-    if (gift.jewelryStyle && gift.jewelryStyle.length > maxSelections) {
-      const trimmedStyles = gift.jewelryStyle.slice(0, maxSelections);
-      handleChange("jewelryStyle", trimmedStyles);
-    }
+    const colorField = gift.jewelryColors ?? gift.jewelryColor;
+    const hasColor = Array.isArray(colorField)
+      ? colorField.length > 0
+      : !!colorField;
 
-    // Trim jewelryColors or jewelryColor if it exceeds quantity
-    const colorField = isKid ? "jewelryColors" : "jewelryColor";
-    if (gift[colorField] && gift[colorField].length > maxSelections) {
-      const trimmedColors = gift[colorField].slice(0, maxSelections);
-      handleChange(colorField, trimmedColors);
-    }
-  }, [gift.quantity, gift.jewelryStyle, gift.jewelryColors, gift.jewelryColor, isKid, handleChange]);
+    const hasStyle = Array.isArray(gift.jewelryStyle)
+      ? gift.jewelryStyle.length > 0
+      : !!gift.jewelryStyle;
+
+    const isValid = hasPrice && hasQuantity && hasColor && hasStyle;
+
+    setGiftValid(recipientId, index, isValid);
+  }, [
+    gift.jewelryPrice,
+    gift.quantity,
+    gift.jewelryStyle,
+    gift.jewelryColor,
+    gift.jewelryColors,
+    recipientId,
+    index
+  ]);
+
+
+
 
   return (
     <div className="mb-4">
