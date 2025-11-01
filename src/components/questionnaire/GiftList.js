@@ -1,7 +1,5 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GiftItem from "./GiftItem";
-
-
 
 const GiftList = ({
   recipient,
@@ -14,28 +12,24 @@ const GiftList = ({
   setIsStepValid
 }) => {
 
-  const [giftValidities, setGiftValidities] = useState({}); // <- object map
+  const [giftValidities, setGiftValidities] = useState(
+    recipient.gifts.map(() => false) // default all invalid
+  );
 
-  
-  
-  
-  // stable setter to prevent re-render loops & avoid unnecessary updates
-  const setGiftValid = useCallback((recipientId, giftIndex, isValid) => {
-    setGiftValidities(prev => {
-      const key = `${recipientId}-${giftIndex}`;
-      // avoid returning new object if nothing changed
-      if (prev[key] === isValid) return prev;
-      return { ...prev, [key]: isValid };
-    });
-  }, []);
-  
-  
   useEffect(() => {
-  // If no entries yet, treat as false
-  const values = Object.values(giftValidities);
-  const allValid = values.length > 0 ? values.every(Boolean) : false;
-  setIsStepValid(allValid); // setIsStepValid is from Questionnaire props/state
+  const allValid = giftValidities.every(Boolean);
+  setIsStepValid(allValid);   // 👈 comes as a prop from Questionnaire
 }, [giftValidities, setIsStepValid]);
+
+
+
+  const setGiftValid = (giftIndex, isValid) => {
+    setGiftValidities((prev) => {
+      const updated = [...prev];
+      updated[giftIndex] = isValid;
+      return updated;
+    });
+  };
 
 
 
