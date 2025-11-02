@@ -53,30 +53,50 @@ const JewelleryGiftDetails = ({
 
 
   useEffect(() => {
-    const hasPrice = !!gift.jewelryPrice;
-    const hasQuantity = !!gift.quantity;
+  const hasPrice = Boolean(gift.jewelryPrice);
+  const hasQuantity = Boolean(gift.quantity);
 
-    const colorField = gift.jewelryColors ?? gift.jewelryColor;
-    const hasColor = Array.isArray(colorField)
+  // 💎 Handle both "jewelryColors" (kids) and "jewelryColor" (adults)
+  const colorField =
+    gift.jewelryColors !== undefined ? gift.jewelryColors : gift.jewelryColor;
+
+  const hasColor =
+    typeof colorField === "string"
+      ? colorField.trim() !== ""
+      : Array.isArray(colorField)
       ? colorField.length > 0
-      : !!colorField;
+      : false;
 
-    const hasStyle = Array.isArray(gift.jewelryStyle)
+  const hasStyle =
+    typeof gift.jewelryStyle === "string"
+      ? gift.jewelryStyle.trim() !== ""
+      : Array.isArray(gift.jewelryStyle)
       ? gift.jewelryStyle.length > 0
-      : !!gift.jewelryStyle;
+      : false;
 
-    const isValid = hasPrice && hasQuantity && hasColor && hasStyle;
+  const isValid = hasPrice && hasQuantity && hasColor && hasStyle;
 
-    setGiftValid(recipientId, index, isValid);
-  }, [
-    gift.jewelryPrice,
-    gift.quantity,
-    gift.jewelryStyle,
-    gift.jewelryColor,
-    gift.jewelryColors,
-    recipientId,
-    index
-  ]);
+  console.log("Gift validation check:", {
+  jewelryPrice: gift.jewelryPrice,
+  quantity: gift.quantity,
+  jewelryStyle: gift.jewelryStyle,
+  jewelryColors: gift.jewelryColors,
+  jewelryColor: gift.jewelryColor,
+  isValid,
+});
+
+
+  setGiftValid(index, isValid);
+}, [
+  gift.jewelryPrice,
+  gift.quantity,
+  gift.jewelryStyle,
+  gift.jewelryColor,
+  gift.jewelryColors,
+  index,
+  setGiftValid,
+]);
+
 
 
 
@@ -157,7 +177,7 @@ const JewelleryGiftDetails = ({
           {/* Color combinations */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-1">
-              Color Combinations
+              Color
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {[

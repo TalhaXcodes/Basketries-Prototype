@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import GiftItem from "./GiftItem";
 
 const GiftList = ({
@@ -23,13 +23,14 @@ const GiftList = ({
 
 
 
-  const setGiftValid = (giftIndex, isValid) => {
-    setGiftValidities((prev) => {
-      const updated = [...prev];
-      updated[giftIndex] = isValid;
-      return updated;
-    });
-  };
+  const setGiftValid = useCallback((giftIndex, isValid) => {
+  setGiftValidities((prev) => {
+    const updated = [...prev];
+    updated[giftIndex] = isValid;
+    return updated;
+  });
+}, []);
+
 
 
 
