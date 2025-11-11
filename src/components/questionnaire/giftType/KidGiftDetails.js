@@ -110,6 +110,28 @@ const KidGiftDetails = ({
 
   const perfumeScentOptions = ["Floral", "Fruity", "Citrus", "Woody"];
 
+  // 💍 Accessories Options
+  const accessoryStyles = [
+    "Chain",
+    "Rings",
+    "Bracelets",
+    "Bangles",
+    "Scrunchies",
+    "Wrist bands",
+    "Bow style hairband",
+  ];
+
+  const accessoryColors = [
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow",
+    "White",
+    "Black",
+    "Purple",
+  ];
+
+
   // --- 🧠 Validation Hook ---
   useEffect(() => {
     let isValid = false;
@@ -127,6 +149,12 @@ const KidGiftDetails = ({
           (item) =>
             !foodFlavourOptions[item] || selectedFlavours[item]
         );
+    } else if (selectedType === "Accessories") {
+      isValid =
+        gift.jewelryPrice &&
+        gift.quantity &&
+        gift.jewelryStyle &&
+        gift.jewelryColors;
     }
 
     setGiftValid(index, isValid);
@@ -285,6 +313,92 @@ const KidGiftDetails = ({
               )
           )}
         </div>
+      )}
+
+      {/* 💍 Accessories Section */}
+      {selectedType === "Accessories" && (
+        <>
+          {/* Price */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Price</label>
+            <div className="flex flex-col space-y-2">
+              {["1000–2000 PKR", "2000–3000 PKR", "3000–4000 PKR", "4000–5000 PKR", "More than 5000 PKR"].map((price) => (
+                <label key={price} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name={`jewelryPrice-${recipientId}-${index}`}
+                    checked={gift.jewelryPrice === price}
+                    onChange={() => handleChange("jewelryPrice", price)}
+                  />
+                  <span className="text-gray-700">{price}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Quantity */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Quantity</label>
+            <select
+              value={gift.quantity || ""}
+              onChange={(e) => handleChange("quantity", parseInt(e.target.value))}
+              className="w-full border border-rose-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+              disabled={!gift.jewelryPrice}
+            >
+              {!gift.jewelryPrice && <option value="">Select a price first</option>}
+              {gift.jewelryPrice &&
+                (function () {
+                  switch (gift.jewelryPrice) {
+                    case "1000–2000 PKR": return [1, 2];
+                    case "2000–3000 PKR": return [1, 2, 3];
+                    case "3000–4000 PKR": return [1, 2, 3, 4];
+                    case "4000–5000 PKR": return [1, 2, 3, 4, 5, 6];
+                    case "More than 5000 PKR": return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                    default: return [];
+                  }
+                })().map(qty => <option key={qty} value={qty}>{qty}</option>)
+              }
+            </select>
+          </div>
+
+          {/* Style */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Style</label>
+            <div className="flex flex-col space-y-2">
+              {accessoryStyles.map((style) => (
+                <label key={style} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name={`jewelryStyle-${recipientId}-${index}`}
+                    checked={gift.jewelryStyle === style}
+                    onChange={() => handleChange("jewelryStyle", style)}
+                    disabled={!gift.jewelryPrice}
+                  />
+                  <span className="text-gray-700">{style}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Colors */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Color</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {accessoryColors.map((color) => (
+                <label key={color} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name={`jewelryColors-${recipientId}-${index}`}
+                    checked={gift.jewelryColors === color}
+                    onChange={() => handleChange("jewelryColors", color)}
+                    disabled={!gift.jewelryPrice}
+                  />
+                  <span className="text-gray-700">{color}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

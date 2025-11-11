@@ -97,10 +97,6 @@ const JewelleryGiftDetails = ({
   setGiftValid,
 ]);
 
-
-
-
-
   return (
     <div className="mb-4">
       <h4 className="text-lg font-semibold text-rose-600 mb-4">

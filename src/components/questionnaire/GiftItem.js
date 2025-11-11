@@ -116,7 +116,7 @@ const GiftItem = ({
         />
       )}
 
-      {(gift.type === "Jewellery" || gift.type === "Accessories") && (
+      {(gift.type === "Jewellery") && ageType !== "Kid" && (
         <JewelleryGiftDetails
           gift={gift}
           recipientId={recipientId}
