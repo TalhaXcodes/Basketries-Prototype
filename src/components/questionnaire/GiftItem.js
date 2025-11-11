@@ -35,14 +35,6 @@ const GiftItem = ({
 
   const uniqueGiftOptions = [...new Set(finalGiftOptions)];
 
-  // State to track special instructions per recipient
-  // const [specialInstructions, setSpecialInstructions] = useState(gift.specialInstructions || "");
-
-  // const handleSpecialInstructionsChange = (e) => {
-  //   const value = e.target.value;
-  //   setSpecialInstructions(value);
-  //   handleGiftSelection(recipientId, index, "specialInstructions", value);
-  // };
 
   return (
     <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
@@ -137,7 +129,7 @@ const GiftItem = ({
       )}
 
 
-      {gift.type === "Perfume" && (
+      {/* {gift.type === "Perfume" && (
         <PerfumeGiftDetails
           gift={gift}
           recipientId={recipientId}
@@ -146,7 +138,7 @@ const GiftItem = ({
           ageType={ageType}
           setGiftValid={setGiftValid}
         />
-      )}
+      )} */}
 
       {gift.type === "Edible Stuff" && (
         <EdibleGiftDetails
@@ -182,7 +174,7 @@ const GiftItem = ({
         />
       )}
 
-      {/* Show KidGiftDetails for kids */}
+      {/* Show KidGiftDetails for kids
       {ageType === "Kid" && (
         <KidGiftDetails
           gift={gift}
@@ -192,7 +184,27 @@ const GiftItem = ({
           ageType={ageType}
           setGiftValid={setGiftValid}
         />
-      )}
+      )} */}
+
+      {ageType === "Kid" ? (
+        <KidGiftDetails
+          gift={gift}
+          recipientId={recipientId}
+          index={index}
+          handleGiftSelection={handleGiftSelection}
+          setGiftValid={setGiftValid}
+        />
+      ) : gift.type === "Perfume" ? (
+        <PerfumeGiftDetails
+          gift={gift}
+          recipientId={recipientId}
+          index={index}
+          handleGiftSelection={handleGiftSelection}
+          setGiftValid={setGiftValid}
+        />
+      ) : null}
+
+
     </div>
   );
 };
