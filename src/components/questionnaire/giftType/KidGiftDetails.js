@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 
 const KidGiftDetails = ({
   gift,
@@ -8,8 +8,6 @@ const KidGiftDetails = ({
   setGiftValid,
 }) => {
   const selectedType = gift.type;
-  console.log("Selected gift type:", selectedType);
-
 
   const handleChange = useCallback(
     (field, value) => {
@@ -18,47 +16,134 @@ const KidGiftDetails = ({
     [handleGiftSelection, recipientId, index]
   );
 
-  // ✅ Validation logic for all kid gift types
-  useEffect(() => {
-    let isValid = false;
+  // --- 🍫 Edible Stuff Data ---
+  const priceOptions = [
+    "1000 PKR",
+    "1000–2000 PKR",
+    "3000–4000 PKR",
+    "4000–5000 PKR",
+    "5000–6000 PKR",
+    "6000–7000 PKR",
+  ];
 
-    if (selectedType === "Toys") {
-      isValid = !!gift.kidBudget;
-    } else if (selectedType === "Perfume") {
-      isValid = !!gift.perfumeBudget && !!gift.perfumeScent;
+  const getQuantityOptions = (price) => {
+    switch (price) {
+      case "1000 PKR":
+      case "1000–2000 PKR":
+        return [1, 2];
+      case "3000–4000 PKR":
+        return [1, 2, 3, 4];
+      case "4000–5000 PKR":
+        return [1, 2, 3, 4, 5];
+      case "5000–6000 PKR":
+        return [1, 2, 3, 4, 5, 6];
+      case "6000–7000 PKR":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      default:
+        return [];
     }
+  };
 
-    setGiftValid(index, isValid);
-  }, [gift, index, selectedType, setGiftValid]);
+  const foodOptions = [
+    "Chocolates",
+    "Brownie",
+    "Cake",
+    "Cupcakes",
+    "Snacks",
+    "Jellies",
+    "Popcorns",
+    "Marshmellows",
+    "Cola cans",
+  ];
 
-  // 🎁 Budget options
-  const toyBudgets = [
+  const foodFlavourOptions = {
+    Chocolates: ["Dark Chocolate", "Milk Chocolate", "White Chocolate", "Hazelnut"],
+    Brownie: ["Classic Fudge", "Walnut", "Red Velvet Brownie", "Peanut Butter"],
+    Cake: ["Chocolate", "Red Velvet", "Vanilla", "Black Forest"],
+    Cupcakes: ["Chocolate", "Vanilla", "Strawberry", "Lemon"],
+    Snacks: ["Cheese", "Barbecue", "Sour Cream & Onion", "Spicy Chili"],
+    Jellies: ["Strawberry", "Mango", "Orange", "Grape"],
+    Popcorns: ["Butter", "Caramel", "Cheese", "Spicy"],
+    Marshmellows: ["Classic Vanilla", "Strawberry", "Chocolate-coated", "Caramel-filled"],
+    Cola: [],
+  };
+
+  const [selectedFlavours, setSelectedFlavours] = useState({});
+  const [isPriceSelected, setIsPriceSelected] = useState(!!gift.ediblePrice);
+
+  const handleCheckboxChange = (item) => {
+    const selected = gift.foodItems || [];
+    const maxSelections = gift.edibleQuantity || 1;
+
+    if (selected.includes(item)) {
+      const updated = selected.filter((i) => i !== item);
+      handleChange("foodItems", updated);
+    } else if (selected.length < maxSelections) {
+      const updated = [...selected, item];
+      handleChange("foodItems", updated);
+    }
+  };
+
+  const handleFlavourChange = (foodType, flavour) => {
+    setSelectedFlavours((prev) => ({
+      ...prev,
+      [foodType]: flavour,
+    }));
+    handleChange("flavours", { ...selectedFlavours, [foodType]: flavour });
+  };
+
+  // --- 🧸 Toys Data ---
+  const toyBudgetOptions = [
     "3500 PKR",
     "3500 – 5500 PKR",
     "5500 – 7500 PKR",
     "More than 7500 PKR",
   ];
 
-  const perfumeBudgets = [
+  // --- 👃 Perfume Data ---
+  const perfumeBudgetOptions = [
     "1000–1500 PKR",
     "1500–2000 PKR",
     "2000–2500 PKR",
     "2500–3000 PKR",
   ];
 
-  // 🌸 Kid perfume scents
-  const perfumeScents = ["Floral", "Fruity", "Citrus", "Woody"];
+  const perfumeScentOptions = ["Floral", "Fruity", "Citrus", "Woody"];
 
+  // --- 🧠 Validation Hook ---
+  useEffect(() => {
+    let isValid = false;
+
+    if (selectedType === "Toys") {
+      isValid = !!gift.kidBudget;
+    } else if (selectedType === "Perfume") {
+      isValid = gift.perfumeBudget && gift.perfumeScent;
+    } else if (selectedType === "Edible Stuff") {
+      isValid =
+        gift.ediblePrice &&
+        gift.edibleQuantity &&
+        gift.foodItems?.length === gift.edibleQuantity &&
+        gift.foodItems.every(
+          (item) =>
+            !foodFlavourOptions[item] || selectedFlavours[item]
+        );
+    }
+
+    setGiftValid(index, isValid);
+  }, [gift, selectedType, index, setGiftValid, selectedFlavours]);
+
+  // --- 🏗️ Render ---
   return (
     <div className="mb-4">
-      {/* 🧸 Toys */}
+      {/* 🧸 Toys Section */}
       {selectedType === "Toys" && (
-        <div className="mb-4">
+        <div className="mb-6">
+          <h4 className="text-lg font-semibold text-rose-600 mb-4">Toy Preferences</h4>
           <label className="block text-gray-700 font-medium mb-1">
-            What is your budget for the toy?
+            What is your budget for the gift?
           </label>
           <div className="flex flex-col space-y-2">
-            {toyBudgets.map((price) => (
+            {toyBudgetOptions.map((price) => (
               <label key={price} className="flex items-center space-x-2">
                 <input
                   type="radio"
@@ -73,47 +158,133 @@ const KidGiftDetails = ({
         </div>
       )}
 
-      {/* 🌸 Perfume (Kids) */}
+      {/* 👃 Perfume Section */}
       {selectedType === "Perfume" && (
-        <>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">
-              What is your budget for the perfume?
-            </label>
-            <div className="flex flex-col space-y-2">
-              {perfumeBudgets.map((price) => (
-                <label key={price} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name={`perfumeBudget-${recipientId}-${index}`}
-                    checked={gift.perfumeBudget === price}
-                    onChange={() => handleChange("perfumeBudget", price)}
-                  />
-                  <span className="text-gray-700">{price}</span>
-                </label>
-              ))}
-            </div>
+        <div className="mb-6">
+          <h4 className="text-lg font-semibold text-rose-600 mb-4">Perfume Preferences</h4>
+          <label className="block text-gray-700 font-medium mb-1">
+            What is your budget for the perfume?
+          </label>
+          <div className="flex flex-col space-y-2 mb-4">
+            {perfumeBudgetOptions.map((price) => (
+              <label key={price} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name={`perfumeBudget-${recipientId}-${index}`}
+                  checked={gift.perfumeBudget === price}
+                  onChange={() => handleChange("perfumeBudget", price)}
+                />
+                <span className="text-gray-700">{price}</span>
+              </label>
+            ))}
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">
-              Does the child have a preferred scent?
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {perfumeScents.map((scent) => (
-                <label key={scent} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name={`perfumeScent-${recipientId}-${index}`}
-                    checked={gift.perfumeScent === scent}
-                    onChange={() => handleChange("perfumeScent", scent)}
-                  />
-                  <span className="text-gray-700">{scent}</span>
-                </label>
-              ))}
-            </div>
+          <label className="block text-gray-700 font-medium mb-1">
+            Does the child have a preferred scent?
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {perfumeScentOptions.map((scent) => (
+              <label key={scent} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name={`perfumeScent-${recipientId}-${index}`}
+                  checked={gift.perfumeScent === scent}
+                  onChange={() => handleChange("perfumeScent", scent)}
+                />
+                <span className="text-gray-700">{scent}</span>
+              </label>
+            ))}
           </div>
-        </>
+        </div>
+      )}
+
+      {/* 🍫 Edible Stuff Section */}
+      {selectedType === "Edible Stuff" && (
+        <div className="mb-6">
+          <h4 className="text-lg font-semibold text-rose-600 mb-4">Edible Preferences</h4>
+
+          {/* Price */}
+          <label className="block text-gray-700 font-medium mb-1">Price</label>
+          <div className="flex flex-col space-y-2 mb-4">
+            {priceOptions.map((price) => (
+              <label key={price} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name={`ediblePrice-${recipientId}-${index}`}
+                  checked={gift.ediblePrice === price}
+                  onChange={() => {
+                    handleChange("ediblePrice", price);
+                    setIsPriceSelected(true);
+                  }}
+                />
+                <span className="text-gray-700">{price}</span>
+              </label>
+            ))}
+          </div>
+
+          {/* Quantity */}
+          <label className="block text-gray-700 font-medium mb-1">Quantity</label>
+          <select
+            value={gift.edibleQuantity || ""}
+            onChange={(e) =>
+              handleChange("edibleQuantity", parseInt(e.target.value))
+            }
+            className="w-full border border-rose-300 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-rose-400"
+            disabled={!isPriceSelected}
+          >
+            {!isPriceSelected && <option value="">Select a price first</option>}
+            {isPriceSelected &&
+              getQuantityOptions(gift.ediblePrice).map((qty) => (
+                <option key={qty} value={qty}>
+                  {qty}
+                </option>
+              ))}
+          </select>
+
+          {/* Food Selection */}
+          <label className="block text-gray-700 font-medium mb-1">Food</label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+            {foodOptions.map((item) => (
+              <label key={item} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={gift.foodItems?.includes(item) || false}
+                  onChange={() => handleCheckboxChange(item)}
+                  disabled={!isPriceSelected}
+                />
+                <span className="text-gray-700">{item}</span>
+              </label>
+            ))}
+          </div>
+
+          {/* Flavour Selection */}
+          {gift.foodItems?.map(
+            (item) =>
+              foodFlavourOptions[item] &&
+              foodFlavourOptions[item].length > 0 && (
+                <div key={item} className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-1">
+                    Flavour for {item}
+                  </label>
+                  <select
+                    value={selectedFlavours[item] || ""}
+                    onChange={(e) =>
+                      handleFlavourChange(item, e.target.value)
+                    }
+                    className="w-full border border-rose-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                    disabled={!isPriceSelected}
+                  >
+                    <option value="">Select a flavour</option>
+                    {foodFlavourOptions[item].map((flavour) => (
+                      <option key={flavour} value={flavour}>
+                        {flavour}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )
+          )}
+        </div>
       )}
     </div>
   );

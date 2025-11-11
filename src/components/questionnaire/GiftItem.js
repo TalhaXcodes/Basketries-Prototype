@@ -140,7 +140,7 @@ const GiftItem = ({
         />
       )} */}
 
-      {gift.type === "Edible Stuff" && (
+      {gift.type === "Edible Stuff" && ageType !== "Kid" && (
         <EdibleGiftDetails
           gift={gift}
           recipientId={recipientId}
