@@ -1,5 +1,17 @@
 import React, { useEffect, useCallback, useState } from "react";
 
+const foodFlavourOptions = {
+  Chocolates: ["Dark Chocolate", "Milk Chocolate", "White Chocolate", "Hazelnut"],
+  Brownie: ["Classic Fudge", "Walnut", "Red Velvet Brownie", "Peanut Butter"],
+  Cake: ["Chocolate", "Red Velvet", "Vanilla", "Black Forest"],
+  Cupcakes: ["Chocolate", "Vanilla", "Strawberry", "Lemon"],
+  Snacks: ["Cheese", "Barbecue", "Sour Cream & Onion", "Spicy Chili"],
+  Jellies: ["Strawberry", "Mango", "Orange", "Grape"],
+  Popcorns: ["Butter", "Caramel", "Cheese", "Spicy"],
+  Marshmellows: ["Classic Vanilla", "Strawberry", "Chocolate-coated", "Caramel-filled"],
+  Cola: [],
+};
+
 const KidGiftDetails = ({
   gift,
   recipientId,
@@ -56,18 +68,6 @@ const KidGiftDetails = ({
     "Cola cans",
   ];
 
-  const foodFlavourOptions = {
-    Chocolates: ["Dark Chocolate", "Milk Chocolate", "White Chocolate", "Hazelnut"],
-    Brownie: ["Classic Fudge", "Walnut", "Red Velvet Brownie", "Peanut Butter"],
-    Cake: ["Chocolate", "Red Velvet", "Vanilla", "Black Forest"],
-    Cupcakes: ["Chocolate", "Vanilla", "Strawberry", "Lemon"],
-    Snacks: ["Cheese", "Barbecue", "Sour Cream & Onion", "Spicy Chili"],
-    Jellies: ["Strawberry", "Mango", "Orange", "Grape"],
-    Popcorns: ["Butter", "Caramel", "Cheese", "Spicy"],
-    Marshmellows: ["Classic Vanilla", "Strawberry", "Chocolate-coated", "Caramel-filled"],
-    Cola: [],
-  };
-
   const [selectedFlavours, setSelectedFlavours] = useState({});
   const [isPriceSelected, setIsPriceSelected] = useState(!!gift.ediblePrice);
 
@@ -85,11 +85,11 @@ const KidGiftDetails = ({
   };
 
   const handleFlavourChange = (foodType, flavour) => {
-    setSelectedFlavours((prev) => ({
-      ...prev,
-      [foodType]: flavour,
-    }));
-    handleChange("flavours", { ...selectedFlavours, [foodType]: flavour });
+    setSelectedFlavours((prev) => {
+      const updated = { ...prev, [foodType]: flavour };
+      handleChange("flavours", updated);
+      return updated;
+    });
   };
 
   // --- 🧸 Toys Data ---
@@ -242,6 +242,7 @@ const KidGiftDetails = ({
                   checked={gift.ediblePrice === price}
                   onChange={() => {
                     handleChange("ediblePrice", price);
+                    handleChange("edibleQuantity", 1);
                     setIsPriceSelected(true);
                   }}
                 />

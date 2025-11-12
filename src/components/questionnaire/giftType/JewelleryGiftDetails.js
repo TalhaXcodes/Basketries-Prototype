@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const JewelleryGiftDetails = ({
   gift,
@@ -9,11 +9,14 @@ const JewelleryGiftDetails = ({
   ageType,
   setGiftValid
 }) => {
-  const handleChange = (field, value) => {
-    handleGiftSelection(recipientId, index, field, value);
-  };
+  const handleChange = useCallback(
+    (field, value) => {
+      handleGiftSelection(recipientId, index, field, value);
+    },
+    [handleGiftSelection, recipientId, index] // stable dependencies
+  );
 
-  const isKid = ageType === "Kid";
+
   const isFemaleAdult = gender === "Female" && ageType === "Adult";
   const isMaleAdult = gender === "Male" && ageType === "Adult";
 
@@ -53,49 +56,49 @@ const JewelleryGiftDetails = ({
 
 
   useEffect(() => {
-  const hasPrice = Boolean(gift.jewelryPrice);
-  const hasQuantity = Boolean(gift.quantity);
+    const hasPrice = Boolean(gift.jewelryPrice);
+    const hasQuantity = Boolean(gift.quantity);
 
-  // 💎 Handle both "jewelryColors" (kids) and "jewelryColor" (adults)
-  const colorField =
-    gift.jewelryColors !== undefined ? gift.jewelryColors : gift.jewelryColor;
+    // 💎 Handle both "jewelryColors" (kids) and "jewelryColor" (adults)
+    const colorField =
+      gift.jewelryColors !== undefined ? gift.jewelryColors : gift.jewelryColor;
 
-  const hasColor =
-    typeof colorField === "string"
-      ? colorField.trim() !== ""
-      : Array.isArray(colorField)
-      ? colorField.length > 0
-      : false;
+    const hasColor =
+      typeof colorField === "string"
+        ? colorField.trim() !== ""
+        : Array.isArray(colorField)
+          ? colorField.length > 0
+          : false;
 
-  const hasStyle =
-    typeof gift.jewelryStyle === "string"
-      ? gift.jewelryStyle.trim() !== ""
-      : Array.isArray(gift.jewelryStyle)
-      ? gift.jewelryStyle.length > 0
-      : false;
+    const hasStyle =
+      typeof gift.jewelryStyle === "string"
+        ? gift.jewelryStyle.trim() !== ""
+        : Array.isArray(gift.jewelryStyle)
+          ? gift.jewelryStyle.length > 0
+          : false;
 
-  const isValid = hasPrice && hasQuantity && hasColor && hasStyle;
+    const isValid = hasPrice && hasQuantity && hasColor && hasStyle;
 
-  console.log("Gift validation check:", {
-  jewelryPrice: gift.jewelryPrice,
-  quantity: gift.quantity,
-  jewelryStyle: gift.jewelryStyle,
-  jewelryColors: gift.jewelryColors,
-  jewelryColor: gift.jewelryColor,
-  isValid,
-});
+    console.log("Gift validation check:", {
+      jewelryPrice: gift.jewelryPrice,
+      quantity: gift.quantity,
+      jewelryStyle: gift.jewelryStyle,
+      jewelryColors: gift.jewelryColors,
+      jewelryColor: gift.jewelryColor,
+      isValid,
+    });
 
 
-  setGiftValid(index, isValid);
-}, [
-  gift.jewelryPrice,
-  gift.quantity,
-  gift.jewelryStyle,
-  gift.jewelryColor,
-  gift.jewelryColors,
-  index,
-  setGiftValid,
-]);
+    setGiftValid(index, isValid);
+  }, [
+    gift.jewelryPrice,
+    gift.quantity,
+    gift.jewelryStyle,
+    gift.jewelryColor,
+    gift.jewelryColors,
+    index,
+    setGiftValid,
+  ]);
 
   return (
     <div className="mb-4">
@@ -139,67 +142,6 @@ const JewelleryGiftDetails = ({
             ))}
         </select>
       </div>
-
-      {/* 🧒 Kid Options */}
-      {isKid && (
-        <>
-          {/* Style */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">Style</label>
-            <div className="flex flex-col space-y-2">
-              {[
-                "Chain",
-                "Rings",
-                "Bracelets",
-                "Bangles",
-                "Scrunchies",
-                "Wrist bands",
-                "Bow style hairband",
-              ].map((style) => (
-                <label key={style} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name={`jewelryStyle-${recipientId}-${index}`}
-                    checked={gift.jewelryStyle === style}
-                    onChange={() => handleChange("jewelryStyle", style)}
-                    disabled={!isPriceSelected}
-                  />
-                  <span className="text-gray-700">{style}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Color combinations */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">
-              Color
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {[
-                "Red",
-                "Blue",
-                "Green",
-                "Yellow",
-                "White",
-                "Black",
-                "Purple",
-              ].map((color) => (
-                <label key={color} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name={`jewelryColors-${recipientId}-${index}`}
-                    checked={gift.jewelryColors === color}
-                    onChange={() => handleChange("jewelryColors", color)}
-                    disabled={!isPriceSelected}
-                  />
-                  <span className="text-gray-700">{color}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
 
       {/* 👨 Adult Male Options */}
       {isMaleAdult && (
