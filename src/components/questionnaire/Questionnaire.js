@@ -320,19 +320,30 @@ const Questionnaire = () => {
               <GiftPackaging
                 packagingChoice={packagingChoice}
                 setPackagingChoice={setPackagingChoice}
+                setIsStepValid={setIsStepValid}
               />
 
               <div className="flex justify-between mt-6">
                 <button
                   onClick={() => setPhase("personality")}
-                  className="bg-rose-600 text-white py-2 px-4 rounded-md hover:bg-rose-700 transition"
+                  disabled={!isStepValid}
+                  className={`px-4 py-2 rounded ${isStepValid ? "bg-rose-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
                 >
                   Back
                 </button>
 
                 <button
-                  onClick={() => setPhase("feedback")}
-                  className="bg-rose-600 text-white py-2 px-4 rounded-md hover:bg-rose-700 transition"
+                  onClick={() => {
+                    if (packagingChoice) {
+                      setPhase("feedback");
+                    }
+                  }}
+                  disabled={!packagingChoice} // ✅ disable until user selects a packaging
+                  className={`py-2 px-4 rounded-md transition ${packagingChoice
+                      ? "bg-rose-600 text-white hover:bg-rose-700"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
                 >
                   Next
                 </button>
