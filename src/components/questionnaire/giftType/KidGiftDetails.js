@@ -329,7 +329,10 @@ const KidGiftDetails = ({
                     type="radio"
                     name={`jewelryPrice-${recipientId}-${index}`}
                     checked={gift.jewelryPrice === price}
-                    onChange={() => handleChange("jewelryPrice", price)}
+                    onChange={() => {
+                      handleChange("jewelryPrice", price);
+                      handleChange("quantity", 1); // ✅ auto-set default quantity
+                    }}
                   />
                   <span className="text-gray-700">{price}</span>
                 </label>
