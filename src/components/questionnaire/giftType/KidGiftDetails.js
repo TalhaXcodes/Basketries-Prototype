@@ -68,7 +68,6 @@ const KidGiftDetails = ({
     "Cola cans",
   ];
 
-  const [selectedFlavours, setSelectedFlavours] = useState({});
   const [isPriceSelected, setIsPriceSelected] = useState(!!gift.ediblePrice);
 
   const handleCheckboxChange = (item) => {
@@ -85,12 +84,10 @@ const KidGiftDetails = ({
   };
 
   const handleFlavourChange = (foodType, flavour) => {
-    setSelectedFlavours((prev) => {
-      const updated = { ...prev, [foodType]: flavour };
-      handleChange("flavours", updated);
-      return updated;
-    });
-  };
+  const updatedFlavours = { ...(gift.flavours || {}), [foodType]: flavour };
+  handleChange("flavours", updatedFlavours);
+};
+
 
   // --- 🧸 Toys Data ---
   const toyBudgetOptions = [
@@ -147,7 +144,7 @@ const KidGiftDetails = ({
         gift.foodItems?.length === gift.edibleQuantity &&
         gift.foodItems.every(
           (item) =>
-            !foodFlavourOptions[item] || selectedFlavours[item]
+            !foodFlavourOptions[item] || gift.flavours?.[item]
         );
     } else if (selectedType === "Accessories") {
       isValid =
@@ -158,7 +155,7 @@ const KidGiftDetails = ({
     }
 
     setGiftValid(index, isValid);
-  }, [gift, selectedType, index, setGiftValid, selectedFlavours]);
+  }, [gift, selectedType, index, setGiftValid]);
 
   // --- 🏗️ Render ---
   return (
@@ -296,7 +293,7 @@ const KidGiftDetails = ({
                     Flavour for {item}
                   </label>
                   <select
-                    value={selectedFlavours[item] || ""}
+                    value={gift.flavours?.[item] || ""}
                     onChange={(e) =>
                       handleFlavourChange(item, e.target.value)
                     }

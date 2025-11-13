@@ -1,5 +1,29 @@
 import React, { useEffect, useState, useCallback } from "react";
 
+const foodOptions = [
+  "Chocolates",
+  "Cupcakes",
+  "Brownie",
+  "Cake",
+  "Snacks",
+  "Jellies",
+  "Popcorns",
+  "Marshmellows",
+  "Cola cans",
+];
+
+const foodFlavourOptions = {
+  Chocolates: ["Dark Chocolate", "Milk Chocolate", "White Chocolate", "Hazelnut"],
+  Brownie: ["Classic Fudge", "Walnut", "Red Velvet Brownie", "Peanut Butter"],
+  Cake: ["Chocolate", "Red Velvet", "Vanilla", "Black Forest"],
+  Cupcakes: ["Chocolate", "Vanilla", "Strawberry", "Lemon"],
+  Snacks: ["Cheese", "Barbecue", "Sour Cream & Onion", "Spicy Chili"],
+  Jellies: ["Strawberry", "Mango", "Orange", "Grape"],
+  Popcorns: ["Butter", "Caramel", "Cheese", "Spicy"],
+  Marshmellows: ["Classic Vanilla", "Strawberry", "Chocolate-coated", "Caramel-filled"],
+  Cola: [] // no flavours
+};
+
 const EdibleGiftDetails = ({
   gift,
   recipientId,
@@ -28,39 +52,11 @@ const EdibleGiftDetails = ({
     }
   };
 
-  const foodOptions = [
-    "Chocolates",
-    "Brownie",
-    "Cake",
-    "Cupcakes",
-    "Snacks",
-    "Jellies",
-    "Popcorns",
-    "Marshmellows",
-    "Cola cans",
-  ];
-
-  const foodFlavourOptions = {
-    Chocolates: ["Dark Chocolate", "Milk Chocolate", "White Chocolate", "Hazelnut"],
-    Brownie: ["Classic Fudge", "Walnut", "Red Velvet Brownie", "Peanut Butter"],
-    Cake: ["Chocolate", "Red Velvet", "Vanilla", "Black Forest"],
-    Cupcakes: ["Chocolate", "Vanilla", "Strawberry", "Lemon"],
-    Snacks: ["Cheese", "Barbecue", "Sour Cream & Onion", "Spicy Chili"],
-    Jellies: ["Strawberry", "Mango", "Orange", "Grape"],
-    Popcorns: ["Butter", "Caramel", "Cheese", "Spicy"],
-    Marshmellows: ["Classic Vanilla", "Strawberry", "Chocolate-coated", "Caramel-filled"],
-    Cola: [] // no flavours
-  };
-
-  const [selectedFlavours, setSelectedFlavours] = useState({});
-
   const handleFlavourChange = (foodType, flavour) => {
-    setSelectedFlavours((prev) => ({
-      ...prev,
-      [foodType]: flavour,
-    }));
-    handleChange("flavours", { ...selectedFlavours, [foodType]: flavour });
+    const updatedFlavours = { ...(gift.flavours || {}), [foodType]: flavour };
+    handleChange("flavours", updatedFlavours);
   };
+
 
 
 
@@ -118,11 +114,11 @@ const EdibleGiftDetails = ({
       gift.foodItems?.length === gift.edibleQuantity &&
       gift.foodItems.every(
         (item) =>
-          !foodFlavourOptions[item] || selectedFlavours[item]
+          !foodFlavourOptions[item] || gift.flavours?.[item]
       );
 
     setGiftValid(index, isValid);
-  }, [gift, selectedFlavours, index, setGiftValid]);
+  }, [gift, index, setGiftValid]);
 
 
   return (
@@ -196,7 +192,7 @@ const EdibleGiftDetails = ({
                 Flavour for {item}
               </label>
               <select
-                value={selectedFlavours[item] || ""}
+                value={gift.flavours?.[item] || ""}
                 onChange={(e) => handleFlavourChange(item, e.target.value)}
                 className="w-full border border-rose-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                 disabled={!isPriceSelected}
